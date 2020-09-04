@@ -1,6 +1,10 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  StyleSheet, Text, View, TextInput,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
 } from 'react-native';
 import TimerButton from './TimerButton';
 
@@ -59,8 +63,19 @@ class TimerForm extends React.Component {
     this.setState({ project });
   };
 
+  handleSubmit = () => {
+    const { onFormSubmit, id } = this.props;
+    const { title, project } = this.state;
+
+    onFormSubmit({
+      id,
+      title,
+      project,
+    });
+  };
+
   render() {
-    const { id } = this.props;
+    const { id, onFormClose } = this.props;
     const { title, project } = this.state;
 
     const submitText = id ? 'Update' : 'Create';
@@ -94,8 +109,14 @@ class TimerForm extends React.Component {
             small
             color="#21BA45"
             title={submitText}
+            onPress={this.handleSubmit}
           />
-          <TimerButton small color="#DB2828" title="Cancel" />
+          <TimerButton
+            small
+            color="#DB2828"
+            title="Cancel"
+            onPress={onFormClose}
+          />
         </View>
       </View>
     );
@@ -103,3 +124,17 @@ class TimerForm extends React.Component {
 }
 
 export default TimerForm;
+
+TimerForm.propTypes = {
+  id: PropTypes.string,
+  onFormClose: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  project: PropTypes.string,
+  title: PropTypes.string,
+};
+
+TimerForm.defaultProps = {
+  id: null,
+  project: '',
+  title: '',
+};
